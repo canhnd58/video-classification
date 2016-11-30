@@ -1,1 +1,7 @@
-videos
+# Videos are put here but should not be tracked by git
+videos/*
+!videos/.keep
+
+# Python compiled files
+*.pyc
+
