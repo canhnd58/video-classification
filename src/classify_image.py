@@ -43,8 +43,8 @@ import tarfile
 import numpy as np
 from six.moves import urllib
 import tensorflow as tf
-from spilitVideo import*
 import copy
+import cv2
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -208,19 +208,7 @@ def maybe_download_and_extract():
 
 
 def main(_):
-  maybe_download_and_extract()
-
-  image = ('frame1.jpg')
-  count = run_inference_on_image(image)
-  for num in range(2,4):
-    image = ('frame%d.jpg' %num)
-    countImage = run_inference_on_image(image)
-    count = np.vstack((count, countImage))
-  node_lookup = NodeLookup()
-
-  count = np.mean(count,axis=0)
-  print (count)
-  print (count.size)
+  print(extract_image_feature())
 
   # for num,value in enumerate(count):
   #   print(value)
