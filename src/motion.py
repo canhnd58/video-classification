@@ -7,7 +7,7 @@ DURATION = 10
 THRESHOLD = 32
 MC_MAX = 10
 
-def calculate(video=VIDEO, **kwargs):
+def motion(video=VIDEO, **kwargs):
     duration = kwargs.pop('duration', DURATION)
     threshold = kwargs.pop('threshold', THRESHOLD)
     debug = kwargs.pop('debug', False)
@@ -16,7 +16,7 @@ def calculate(video=VIDEO, **kwargs):
     prev = None
     timestamp = 0
 
-    fgbg = cv2.createBackgroundSubtractorMOG2()
+    # fgbg = cv2.createBackgroundSubtractorMOG2()
 
     # Initialize motion coefficient array
     mc_array = np.array([])
@@ -37,8 +37,8 @@ def calculate(video=VIDEO, **kwargs):
             continue
 
         # Update motion history
-        # diff = cv2.absdiff(frame, prev)
-        diff = fgbg.apply(frame)
+        diff = cv2.absdiff(frame, prev)
+        # diff = fgbg.apply(frame)
         ret, fg = cv2.threshold(diff, threshold, 1, cv2.THRESH_BINARY)
         timestamp += 1
         mhi[fg!=0] = timestamp
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     video = sys.argv[1]
     debug = '--debug' in sys.argv
 
-    mean, std, zero, large = calculate(video, debug=debug)
+    mean, std, zero, large = motion(video, debug=debug)
     print "Motion Coefficient"
     print "Mean\tStd\t=0\t>%d" % MC_MAX
     print "%.2f\t%.2f\t%d\t%d" % (mean, std, zero, large)
