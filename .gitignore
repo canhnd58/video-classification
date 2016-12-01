@@ -5,3 +5,5 @@ videos/*
 # Python compiled files
 *.pyc
 
+# WAV files
+*.wav
