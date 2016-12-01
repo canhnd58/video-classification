@@ -178,13 +178,13 @@ def run_inference_on_image(image):
     temp = copy.copy(predictions)
 
     # Creates node ID --> English string lookup.
-    node_lookup = NodeLookup()
+    # node_lookup = NodeLookup()
 
-    top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
-    for node_id in top_k:
-      human_string = node_lookup.id_to_string(node_id)
-      score = predictions[node_id]
-      print('%s (score = %.5f)' % (human_string, score))
+    # top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
+    # for node_id in top_k:
+    #   human_string = node_lookup.id_to_string(node_id)
+    #   score = predictions[node_id]
+    #   print('%s (score = %.5f)' % (human_string, score))
     return temp
 
 
@@ -209,8 +209,6 @@ def maybe_download_and_extract():
 
 def main(_):
   maybe_download_and_extract()
-  image = (FLAGS.image_file if FLAGS.image_file else
-           os.path.join(FLAGS.model_dir, 'cropped_panda.jpg'))
 
   image = ('frame1.jpg')
   count = run_inference_on_image(image)
@@ -218,16 +216,17 @@ def main(_):
     image = ('frame%d.jpg' %num)
     countImage = run_inference_on_image(image)
     count = np.vstack((count, countImage))
-    print(count)
   node_lookup = NodeLookup()
 
   count = np.mean(count,axis=0)
   print (count)
+  print (count.size)
 
-  for num,value in enumerate(count):
-    human_string = node_lookup.id_to_string(num)
-    score = count[num]
-    print('%s (score = %.5f)' % (human_string, score))
+  # for num,value in enumerate(count):
+  #   print(value)
+  #   human_string = node_lookup.id_to_string(num)
+  #   score = count[num]
+  #   print('%s (score = %.5f)' % (human_string, score))
 
 if __name__ == '__main__':
   tf.app.run()
