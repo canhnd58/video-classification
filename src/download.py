@@ -43,7 +43,15 @@ def normalize(path, **kwargs):
     subprocess.call(command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
 
     cap = cv2.VideoCapture(path)
-    fourcc = cv2.VideoWriter_fourcc(*codec)
+    cv2_version = cv2.__version__[0]
+
+    if cv2_version == '3'
+        fourcc = cv2.VideoWriter_fourcc(*codec)
+    elif cv2_version == '2':
+        fourcc = cv2.cv.CV_FOURCC(*codec)
+    else:
+        raise Exception('Unsupported opencv version!')
+
     out_path = path[0:-4] + '.30sec.mp4'
     out = cv2.VideoWriter(out_path, fourcc, fps, reso, True)
 
@@ -59,6 +67,7 @@ def normalize(path, **kwargs):
     cap.release()
     out.release()
     os.system('mv %s %s' % (out_path, path))
+    return (audio_path, out_path)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or '--help' in sys.argv:
