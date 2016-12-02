@@ -12,7 +12,7 @@ RESOLUTION = '360p'
 SECONDS = 30
 VIDEO_DIR = 'videos/'
 FPS = 24
-CODEC = 'x264'
+CODEC = 'XVID'
 WIDTH = 640
 HEIGHT = 360
 
@@ -28,8 +28,12 @@ def download(ytid=ID, **kwargs):
         return None
 
     yt.set_filename(ytid)
-    video.download(vdir)
-    return "%s%s.%s" % (vdir, ytid, ftype)
+    filepath = "%s%s.%s" % (vdir, ytid, ftype)
+    try:
+        video.download(vdir)
+    except OSError:
+        os.system('rm %s' % (filepath, ))
+    return filepath
 
 def normalize(path, **kwargs):
     fps = kwargs.pop('fps', FPS)
@@ -45,14 +49,14 @@ def normalize(path, **kwargs):
     cap = cv2.VideoCapture(path)
     cv2_version = cv2.__version__[0]
 
-    if cv2_version == '3'
+    if cv2_version == '3':
         fourcc = cv2.VideoWriter_fourcc(*codec)
     elif cv2_version == '2':
         fourcc = cv2.cv.CV_FOURCC(*codec)
     else:
         raise Exception('Unsupported opencv version!')
 
-    out_path = path[0:-4] + '.30sec.mp4'
+    out_path = path[0:-4] + '.avi'
     out = cv2.VideoWriter(out_path, fourcc, fps, reso, True)
 
     frame_count = fps * seconds
@@ -66,7 +70,7 @@ def normalize(path, **kwargs):
 
     cap.release()
     out.release()
-    os.system('mv %s %s' % (out_path, path))
+    os.unlink(path)
     return (audio_path, out_path)
 
 if __name__ == "__main__":
@@ -77,7 +81,6 @@ if __name__ == "__main__":
     path = download(sys.argv[1])
     if path is not None:
         normalize(path)
-        print '%100s:\tDONE' % (path, )
+        print '%-30s:\tDONE' % (path, )
     else:
-        print '%100s:\tSKIPPED' % (path, )
-
+        print '%-30s:\tSKIPPED' % (path, )
