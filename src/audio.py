@@ -1,9 +1,12 @@
-import os
 import sys
+import os.path
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
 
 def extractAudioFeatures(audioPath):
+    # Check if file exists
+    if not os.path.exists(audioPath):
+        raise Exception('File not found!')
     # Extract features from audio file
     [Fs, x] = audioBasicIO.readAudioFile(audioPath)
     x = audioBasicIO.stereo2mono(x)
