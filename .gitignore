@@ -8,3 +8,6 @@ videos/*
 
 # WAV files
 *.wav
+
+# Logs
+*.log

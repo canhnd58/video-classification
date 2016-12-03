@@ -13,6 +13,10 @@ def export_csv(features,videoId,file):
 	line += '\n'
 	file.write(line)
 
+def print_process(text):
+	print text,
+	sys.stdout.flush()
+
 def extract_feature(data, **kwargs):
 	try:
 		num = kwargs.pop('num_video', NUM_VIDEO)
@@ -26,28 +30,40 @@ def extract_feature(data, **kwargs):
 		for content in contents:
 			try:
 				content = content[:-1]
+				print_process('\r%-30s:\tDownloading' %(content,))
 				path = dl.download(content)
 				if path is None:
 					print '%-30s:\tDOWNLOAD FAIL' % (content, )
 					continue
+				print_process('\r%-30s:\tNormalizing' %(content,))
 				audio_path, video_path = dl.normalize(path)
+
+				print_process('\r%-30s:\tExtracting audio feature  ' %(content,))
 				audio_features = au.extractAudioFeatures(audio_path)
+
+				print_process('\r%-30s:\tExtracting motion feature ' %(content,))
 				motion_features = mo.motion(video_path)
+
+				print_process('\r%-30s:\tExtracting image feature  ' %(content,))
+				print_process('\r')
 				image_features = im.extract_image_feature(video_path)
+
+				print_process('\r%-30s:\tExporting csv file' %(content,))
 				export_csv(audio_features,content,audio_file)
 				export_csv(motion_features,content,motion_file)
 				export_csv(image_features,content,image_file)
 				
-			except:
+			except Exception:
 				print '%-30s:\tEXPORT FAIL' % (content, )
 			
 			else:
-				print '%-30s:\tSUCCESS' % (content, )
+				print '\r%-30s:\tSUCCESS                               ' % (content, )
 				count +=1
 				if str(count) == num:
 					break
 				
 	finally:
+		print_process('\rClosing file')
 		file.close()
 		image_file.close()
 		motion_file.close()
