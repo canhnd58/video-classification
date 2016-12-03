@@ -1,9 +1,7 @@
 import os
 import sys
-import subprocess
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
-import matplotlib.pyplot as plt
 
 def extractAudioFeatures(audioPath):
     # Extract features from audio file
