@@ -6,7 +6,7 @@ import os
 from classify_image import*
 
 IMAGE_STEP = 30
-TOTAL_IMAGE = 4
+TOTAL_IMAGE = 2
 
 def split_video(video):
   vidcap = cv2.VideoCapture(video)
@@ -36,8 +36,7 @@ def extract_image_feature(video):
   return feature
 
 
-def main():
-  print(extract_image_feature('../videos/Doit.mp4'))
-
 if __name__ == '__main__':
-  main()
+  video = sys.argv[1]
+  feature = extract_image_feature(video)
+  print feature
