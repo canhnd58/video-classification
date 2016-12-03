@@ -1,6 +1,7 @@
 import cv2
-import os
 import sys
+import os
+import os.path
 import subprocess
 from pytube import YouTube
 from pytube.exceptions import DoesNotExist
@@ -10,8 +11,8 @@ ID = "wCkerYMffMo"
 FILE_TYPE = 'mp4'
 RESOLUTION = '360p'
 SECONDS = 30
-VIDEO_DIR = 'videos/'
 FPS = 24
+VIDEO_DIR = 'videos/'
 CODEC = 'XVID'
 WIDTH = 640
 HEIGHT = 360
@@ -32,14 +33,19 @@ def download(ytid=ID, **kwargs):
     try:
         video.download(vdir)
     except OSError:
-        os.system('rm %s' % (filepath, ))
+        os.unlink(filepath)
+        video.download(vdir)
     return filepath
 
 def normalize(path, **kwargs):
-    fps = kwargs.pop('fps', FPS)
     reso = kwargs.pop('reso', (WIDTH, HEIGHT))
     seconds = kwargs.pop('sec', SECONDS)
     codec = kwargs.pop('codec', CODEC)
+    fps = kwargs.pop('fps', FPS)
+    remove = kwargs.pop('remove', True)
+
+    if not os.path.isfile(path):
+        raise Exception('%s not found!' % (path, ))
 
     audio_path = path[0:-4] + '.wav'
     command = "ffmpeg -i %s %s -y" % (path, audio_path)
@@ -54,23 +60,25 @@ def normalize(path, **kwargs):
     elif cv2_version == '2':
         fourcc = cv2.cv.CV_FOURCC(*codec)
     else:
-        raise Exception('Unsupported opencv version!')
+        raise Exception('Unsupported OpenCV version!')
 
     out_path = path[0:-4] + '.avi'
     out = cv2.VideoWriter(out_path, fourcc, fps, reso, True)
 
     frame_count = fps * seconds
     while(cap.isOpened()):
-        if frame_count == 0: break
+        if frame_count <= 0: break
         frame_count -= 1
-
         ret, frame = cap.read()
-        if ret:
-            out.write(frame)
+
+        if not ret: continue
+        resized = cv2.resize(frame, reso)
+        out.write(resized)
 
     cap.release()
     out.release()
-    os.unlink(path)
+    if remove: os.unlink(path)
+
     return (audio_path, out_path)
 
 if __name__ == "__main__":
@@ -78,9 +86,18 @@ if __name__ == "__main__":
         print "Usage:\tpython %s YOUTUBE_ID" % sys.argv[0]
         sys.exit(0)
 
-    path = download(sys.argv[1])
-    if path is not None:
-        normalize(path)
-        print '%-30s:\tDONE' % (path, )
-    else:
-        print '%-30s:\tSKIPPED' % (path, )
+    ytid = sys.argv[1]
+    remove = '--keep-origin' not in sys.argv
+
+    path = VIDEO_DIR + ytid + '.mp4'
+    if '--only-normalize' not in sys.argv:
+        path = download(ytid)
+
+    if path is None:
+        print '%-30s:\tSKIPPED' % (ytid, )
+
+    if '--only-download' not in sys.argv:
+        normalize(path, remove=remove)
+
+    print '%-30s:\tDONE' % (ytid, )
+
