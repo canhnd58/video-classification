@@ -26,42 +26,42 @@ def extract_feature(data, **kwargs):
 		image_file = open("csv/image.csv" , "w")
 		motion_file = open("csv/motion.csv" , "w")
 		contents = file.readlines()
-	
+
 		for content in contents:
 			try:
 				content = content[:-1]
-				print_process('\r%-30s:\tDownloading' %(content,))
+				print_process('\r#%s %-30s:\tDownloading' %(count, content))
 				path = dl.download(content)
 				if path is None:
-					print '%-30s:\tDOWNLOAD FAIL' % (content, )
+					print '#%s %-30s:\tDOWNLOAD FAIL' % (count, content)
 					continue
-				print_process('\r%-30s:\tNormalizing' %(content,))
+				print_process('\r#%s %-30s:\tNormalizing' %(count, content))
 				audio_path, video_path = dl.normalize(path)
 
-				print_process('\r%-30s:\tExtracting audio feature  ' %(content,))
+				print_process('\r#%s %-30s:\tExtracting audio feature  ' %(count, content))
 				audio_features = au.extractAudioFeatures(audio_path)
 
-				print_process('\r%-30s:\tExtracting motion feature ' %(content,))
+				print_process('\r#%s %-30s:\tExtracting motion feature ' %(count, content))
 				motion_features = mo.motion(video_path)
 
-				print_process('\r%-30s:\tExtracting image feature  ' %(content,))
+				print_process('\r#%s %-30s:\tExtracting image feature  ' %(count, content))
 				print_process('\r')
 				image_features = im.extract_image_feature(video_path)
 
-				print_process('\r%-30s:\tExporting csv file' %(content,))
+				print_process('\r#%s %-30s:\tExporting csv file' %(count, content))
 				export_csv(audio_features,content,audio_file)
 				export_csv(motion_features,content,motion_file)
 				export_csv(image_features,content,image_file)
-				
+
 			except Exception:
-				print '%-30s:\tEXPORT FAIL' % (content, )
-			
+				print '#%s %-30s:\tEXPORT FAIL' % (content, count)
+
 			else:
-				print '\r%-30s:\tSUCCESS                               ' % (content, )
+				print '\r#%s %-30s:\tSUCCESS                               ' %(count, content)
 				count +=1
 				if str(count) == num:
 					break
-				
+
 	finally:
 		print_process('\rClosing file')
 		file.close()
@@ -79,9 +79,3 @@ if __name__ == "__main__":
 		video = sys.argv[1]
 		num = sys.argv[2]
 		extract_feature(video, num_video = num)
-	
-
-
-
-
-
