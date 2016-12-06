@@ -34,8 +34,8 @@ def extract_image_feature(video):
   # node_lookup = NodeLookup()
 
   feature = np.mean(feature,axis=0)
-  # for num in range(0, TOTAL_IMAGE):
-  # 	os.system("rm " + 'frame%d.jpg' %num)
+  for num in range(0, TOTAL_IMAGE):
+  	os.system("rm " + 'frame%d.jpg' %num)
   return feature
 
 
