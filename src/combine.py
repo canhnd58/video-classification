@@ -53,6 +53,10 @@ def extract_feature(data, **kwargs):
 				export_csv(motion_features,content,motion_file)
 				export_csv(image_features,content,image_file)
 
+				print_process('\r#%s %-30s:\tRemoving files' %(count, content))
+				os.remove(video_path)
+				os.remove(audio_path)
+
 			except Exception:
 				print '#%s %-30s:\tEXPORT FAIL' % (content, count)
 
