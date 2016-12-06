@@ -5,19 +5,23 @@ import cv2
 import os
 from classify_image import *
 
-# IMAGE_STEP * TOTAL_IMAGE should equals 720 (number of frames in 24fps 30s video)
-IMAGE_STEP = 360
+# IMAGE_STEP = 360
 TOTAL_IMAGE = 2
 
 def split_video(video):
   vidcap = cv2.VideoCapture(video)
-  count = 0
-  while count < IMAGE_STEP*TOTAL_IMAGE:
-    success,image = vidcap.read()
-    if count%IMAGE_STEP == 0:
-      temp = count/IMAGE_STEP
-      cv2.imwrite("frame%d.jpg" % temp, image)     # save frame as JPEG file
-    count += 1
+  total_frame = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+  fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+
+  for index in range(0, TOTAL_IMAGE):
+    if index == 0:
+      frame_no = fps * 2 - 1 # The frame in 2nd second
+    else:
+      frame_no = (total_frame / TOTAL_IMAGE) * index - 1
+    vidcap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
+    success, image = vidcap.read()
+    cv2.imwrite("frame%d.jpg" % index, image)
+
 
 def extract_image_feature(video):
   maybe_download_and_extract()
@@ -30,8 +34,6 @@ def extract_image_feature(video):
     image = ('frame%d.jpg' %num)
     temp = run_inference_on_image(image)
     feature = np.vstack((feature, temp))
-
-  # node_lookup = NodeLookup()
 
   feature = np.mean(feature,axis=0)
   for num in range(0, TOTAL_IMAGE):
