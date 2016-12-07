@@ -49,8 +49,8 @@ def normalize(path, **kwargs):
 
     audio_path = path[0:-4] + '.wav'
     command = "ffmpeg -i %s %s -y" % (path, audio_path)
-    FNULL = open(os.devnull, 'w')
-    subprocess.call(command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
+    download_log = open("download_log.txt", 'w')
+    subprocess.call(command, shell=True, stdout=download_log, stderr=subprocess.STDOUT)
 
     cap = cv2.VideoCapture(path)
     cv2_version = cv2.__version__[0]
