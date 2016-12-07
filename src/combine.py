@@ -53,7 +53,7 @@ def extract_feature(data, **kwargs):
 				# image_features = im.extract_image_feature(video_path)
 				# Use subprocess to extracting image features
 				command = "python src/process_image_csv.py videos/%s.avi csv/%s_image.csv" % (content, data_file)
-				process_image_log = open("process_image_log.txt", 'w')
+				process_image_log = open("process_image.log", 'w')
 				subprocess.call(command, shell=True, stdout=process_image_log, stderr=subprocess.STDOUT)
 
 				print_process('\r#%s %-30s:\tExporting csv file' %(count, content))

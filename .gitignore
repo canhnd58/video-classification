@@ -10,5 +10,4 @@ videos/*
 *.wav
 
 # Logs
-process_image_log.txt
-download_log.txt
+*.log
