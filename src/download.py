@@ -3,6 +3,7 @@ import sys
 import os
 import os.path
 import subprocess
+from sys import platform
 from pytube import YouTube
 from pytube.exceptions import DoesNotExist
 
@@ -13,7 +14,8 @@ RESOLUTION = '360p'
 SECONDS = 30
 FPS = 24
 VIDEO_DIR = 'videos/'
-CODEC = 'XVID'
+LINUX_CODEC = 'XVID'
+MAC_CODEC = 'mp4v'
 WIDTH = 640
 HEIGHT = 360
 
@@ -40,17 +42,25 @@ def download(ytid=ID, **kwargs):
 def normalize(path, **kwargs):
     reso = kwargs.pop('reso', (WIDTH, HEIGHT))
     seconds = kwargs.pop('sec', SECONDS)
-    codec = kwargs.pop('codec', CODEC)
     fps = kwargs.pop('fps', FPS)
     remove = kwargs.pop('remove', True)
+
+    if platform == "linux" or platform == "linux2":
+        codec = LINUX_CODEC
+    elif platform == "darwin":
+        codec = MAC_CODEC
+    else:
+        raise Exception("Unsupported Platform")
+
+    codec = kwargs.pop('codec', codec)
 
     if not os.path.isfile(path):
         raise Exception('%s not found!' % (path, ))
 
     audio_path = path[0:-4] + '.wav'
     command = "ffmpeg -i %s %s -y" % (path, audio_path)
-    download_log = open("download.log", 'w')
-    subprocess.call(command, shell=True, stdout=download_log, stderr=subprocess.STDOUT)
+    FNULL = open(os.devnull, 'w')
+    subprocess.call(command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
 
     cap = cv2.VideoCapture(path)
     cv2_version = cv2.__version__[0]
@@ -100,3 +110,4 @@ if __name__ == "__main__":
         normalize(path, remove=remove)
 
     print '%-30s:\tDONE' % (ytid, )
+
