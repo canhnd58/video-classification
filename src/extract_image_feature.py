@@ -6,7 +6,7 @@ import os
 from classify_image import *
 
 # IMAGE_STEP = 360
-TOTAL_IMAGE = 2
+TOTAL_IMAGE = 4
 
 def split_video(video):
   vidcap = cv2.VideoCapture(video)

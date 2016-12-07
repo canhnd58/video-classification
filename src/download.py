@@ -100,4 +100,3 @@ if __name__ == "__main__":
         normalize(path, remove=remove)
 
     print '%-30s:\tDONE' % (ytid, )
-
