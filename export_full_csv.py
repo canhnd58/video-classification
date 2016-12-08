@@ -48,7 +48,7 @@ def process():
 		export_csv(l[num],'Sport',files)
 
 	l = game_motion
-	l = concat(music_audio,music_motion,music_image)
+	l = concat(music_motion,music_audio,music_image)
 	for num, value in enumerate(l):
 		export_csv(l[num],'Music',files)
 
