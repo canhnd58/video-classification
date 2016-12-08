@@ -59,8 +59,8 @@ def normalize(path, **kwargs):
 
     audio_path = path[0:-4] + '.wav'
     command = "ffmpeg -i %s %s -y" % (path, audio_path)
-    FNULL = open(os.devnull, 'w')
-    subprocess.call(command, shell=True, stdout=FNULL, stderr=subprocess.STDOUT)
+    download_log = open("download.log", 'w')
+    subprocess.call(command, shell=True, stdout=download_log, stderr=subprocess.STDOUT)
 
     cap = cv2.VideoCapture(path)
     cv2_version = cv2.__version__[0]
@@ -110,4 +110,3 @@ if __name__ == "__main__":
         normalize(path, remove=remove)
 
     print '%-30s:\tDONE' % (ytid, )
-
