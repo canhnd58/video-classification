@@ -11,3 +11,16 @@ videos/*
 
 # Logs
 *.log
+csv/label2games_audio.csv
+csv/label2games_image.csv
+csv/label2games_motion.csv
+csv/label2musics_audio.csv
+csv/label2musics_image.csv
+csv/label2musics_motion.csv
+csv/label2news_audio.csv
+csv/label2news_image.csv
+csv/label2news_motion.csv
+csv/label2sports_audio.csv
+csv/label2sports_image.csv
+csv/label2sports_motion.csv
+csv/header.txt

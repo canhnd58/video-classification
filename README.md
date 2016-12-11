@@ -1,7 +1,7 @@
 # Video Classification
 
 ### Installation
-- [openCV](http://opencv.org/): `sudo apt-get install python-opencv`
+- [openCV](http://opencv.org/): `sudo apt-get install python-opencv`. Should be in version 3.1.0.
 - [ffmpeg](https://ffmpeg.org/download.html): `sudo apt-get install ffmpeg`
 - [pytube](https://github.com/nficano/pytube): `pip install pytube`
 - [pyAudioAnalysis](https://github.com/tyiannak/pyAudioAnalysis): Follow the instruction on [this](https://github.com/tyiannak/pyAudioAnalysis/wiki/2.-General).
