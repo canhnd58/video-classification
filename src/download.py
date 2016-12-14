@@ -44,6 +44,7 @@ def normalize(path, **kwargs):
     seconds = kwargs.pop('sec', SECONDS)
     fps = kwargs.pop('fps', FPS)
     remove = kwargs.pop('remove', True)
+    log = kwargs.pop('log', True)
 
     if platform == "linux" or platform == "linux2":
         codec = LINUX_CODEC
@@ -57,9 +58,9 @@ def normalize(path, **kwargs):
     if not os.path.isfile(path):
         raise Exception('%s not found!' % (path, ))
 
-    audio_path = path[0:-4] + '.wav'
+    audio_path = path[0:-4] + '.tmp.wav'
     command = "ffmpeg -i %s %s -y" % (path, audio_path)
-    download_log = open("download.log", 'w')
+    download_log = open("download.log", 'w') if log else None
     subprocess.call(command, shell=True, stdout=download_log, stderr=subprocess.STDOUT)
 
     cap = cv2.VideoCapture(path)
@@ -72,7 +73,7 @@ def normalize(path, **kwargs):
     else:
         raise Exception('Unsupported OpenCV version!')
 
-    out_path = path[0:-4] + '.avi'
+    out_path = path[0:-4] + '.tmp.avi'
     out = cv2.VideoWriter(out_path, fourcc, fps, reso, True)
 
     frame_count = fps * seconds

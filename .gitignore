@@ -9,6 +9,9 @@ videos/*
 # WAV files
 *.wav
 
+# Downloaded library
+lib
+
 # Logs
 *.log
 csv/label2games_audio.csv
