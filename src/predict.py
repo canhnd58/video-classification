@@ -97,7 +97,7 @@ def predict(arg, **kwargs):
     try:
         with open(log_file, 'a') as f, stderr_redirector(f):
             if verbose: print_info('Normalizing video...')
-            audio, video = dl.normalize(video_path, remove=False, log=False)
+            audio, video = dl.normalize(video_path, remove=False)
 
             if verbose: print_info('Extracting motion features...')
             motion_f = mo.motion(video)
@@ -134,4 +134,3 @@ if __name__ == '__main__':
 
     video = sys.argv[1]
     print predict(video, model=model_path, verbose=verbose, log=log, youtube=youtube)
-
